@@ -1,6 +1,3 @@
-// >>>>>>>>>>><<<<<<<<<<<
-// >>>>> FOCUS HERE <<<<<
-// >>>>>>>>>>><<<<<<<<<<<
 const dgram = require('dgram')
 
 var transport = function(options){
@@ -22,8 +19,8 @@ Object.assign(transport.prototype, {
         console.log('UDP message sent to ' + host +':'+ port + ':')
         console.log(message)
         cb(null, {status: 'OK', bytes: bytes})
-        client.close()
-    });
+        this.client.close()
+    }.bind(this));
   },
   listen: function(cb){
     if(!this.server){
@@ -35,7 +32,7 @@ Object.assign(transport.prototype, {
       }.bind(this));
 
       this.server.on('message', function (messageStr, remote) {
-        cb(null, JSON.parse(messageStr), remote)
+        cb(null, JSON.parse(messageStr.toString('utf8')), remote)
       });
 
       this.server.bind(this.options.port)
